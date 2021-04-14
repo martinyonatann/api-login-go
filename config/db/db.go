@@ -10,11 +10,8 @@ import (
 )
 
 const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "postgres"
-	dbname   = "users"
+	password = "SXGz0TDpZRVOCgGP"
+	dbname   = "GoLogin"
 )
 
 func GetDBCollection() (*mongo.Collection, error) {
@@ -25,7 +22,7 @@ func GetDBCollection() (*mongo.Collection, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(
-		"mongodb+srv://standard:<password>@cluster0.pdpui.mongodb.net/<database>?retryWrites=true&w=majority",
+		"mongodb+srv://standard:"+password+"@cluster0.pdpui.mongodb.net/"+dbname+"?retryWrites=true&w=majority",
 	))
 
 	if err != nil {
@@ -41,6 +38,5 @@ func GetDBCollection() (*mongo.Collection, error) {
 	}
 
 	collection := client.Database("GoLogin").Collection("users")
-	log.Info("Connection Success!!!")
 	return collection, nil
 }

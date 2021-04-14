@@ -8,8 +8,6 @@ import (
 	"net/http"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	log "github.com/sirupsen/logrus"
-
 	"github.com/martinyonathann/api-login-go/config/db"
 	"github.com/martinyonathann/api-login-go/model"
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,13 +15,11 @@ import (
 )
 
 func RegistrasiHandler(w http.ResponseWriter, r *http.Request) {
-	log.SetFormatter(&log.JSONFormatter{})
 
 	w.Header().Set("Content-Type", "application/json")
 	var user model.User
 	body, _ := ioutil.ReadAll(r.Body)
 	err := json.Unmarshal(body, &user)
-
 	var res model.ResponseResult
 	if err != nil {
 		res.Error = err.Error()
@@ -47,7 +43,6 @@ func RegistrasiHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				res.Error = "Error while Hashing Password, Try Again"
 				json.NewEncoder(w).Encode(res)
-				log.Error(res.Error)
 				return
 			}
 			user.Password = string(hash)
@@ -67,7 +62,6 @@ func RegistrasiHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	res.Result = "Username already Exists!!"
 	json.NewEncoder(w).Encode(res)
-	log.Info(res.Result)
 	return
 }
 
@@ -79,12 +73,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, &user)
 
 	if err != nil {
-		log.Fatal(err)
 	}
 
 	collection, err := db.GetDBCollection()
 	if err != nil {
-		log.Fatal(err)
 	}
 
 	var result model.User
